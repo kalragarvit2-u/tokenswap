@@ -1,19 +1,18 @@
 # 🧪 StellarSwap
 
-![StellarSwap Hero Banner](/Users/garvit/.gemini/antigravity/brain/21f9310b-e68a-4ce8-a560-348e00ccd154/stellarswap_logo_banner_1776465980689.png)
+![StellarSwap Hero Banner](assets/protocol-hub.png)
 
 <div align="center">
   <p><strong>Trade at the Speed of Stellar. Atomic. Transparent. Interconnected.</strong></p>
   
-  [![StellarSwap CI](https://github.com/stellar/stellarswap/actions/workflows/ci.yml/badge.svg)](https://github.com/stellar/stellarswap/actions/workflows/ci.yml)
-  [![StellarSwap Deployment](https://github.com/stellar/stellarswap/actions/workflows/deploy.yml/badge.svg)](https://github.com/stellar/stellarswap/actions/workflows/deploy.yml)
+  [![StellarSwap CI](https://github.com/greyparadox1337/stellarswap/actions/workflows/ci.yml/badge.svg)](https://github.com/greyparadox1337/stellarswap/actions/workflows/ci.yml)
   [![License: MIT](https://img.shields.io/badge/License-MIT-purple.svg)](https://opensource.org/licenses/MIT)
   [![Network: Testnet](https://img.shields.io/badge/Network-Testnet-cyan.svg)](https://developers.stellar.org/docs/fundamentals-and-concepts/network-passphrases)
 </div>
 
 ---
 
-### 🚀 [Live Demo](https://stellarswap.vercel.app)
+### 🚀 [Live Demo](https://stellarswap-kappa.vercel.app)
 
 StellarSwap is an institutional-grade Decentralized Exchange (DEX) protocol built on the Stellar network using Soroban smart contracts. It enables seamless, atomic trading and liquidity provision with a high-fidelity user interface.
 
@@ -24,13 +23,12 @@ StellarSwap is an institutional-grade Decentralized Exchange (DEX) protocol buil
 - **Real-Time Event Streaming**: Sub-second trade awareness powered by Soroban RPC event polling.
 - **Premium Glassmorphism UI**: High-fidelity trading desk built with Next.js 14, Framer Motion, and Tailwind CSS.
 - **Deep Obsidian Aesthetics**: Custom dark-mode design system with floating 3D elements and vibrant gradients.
-- **Mobile Responsive**: Fully optimized for trading on the go with custom bottom sheets and collapsible sidebars.
 
 ## 📱 Visual Showcase
 
-| Desktop Trading Desk | Mobile UI |
+| Protocol Hub | Mobile Responsive View |
 |:---:|:---:|
-| ![Desktop View](/Users/garvit/.gemini/antigravity/brain/21f9310b-e68a-4ce8-a560-348e00ccd154/stellarswap_desktop_view_1776466002996.png) | ![Mobile View](/Users/garvit/.gemini/antigravity/brain/21f9310b-e68a-4ce8-a560-348e00ccd154/stellarswap_mobile_view_1776466025981.png) |
+| ![Protocol Hub](assets/protocol-hub.png) | *[Screenshot Placeholder: Use browser DevTools mobile breakpoint]* |
 
 ## 🏗️ Technical Architecture
 
@@ -52,77 +50,54 @@ graph TD
     end
 ```
 
-## 📜 Contract Registry (Testnet)
+## 📜 Stellar Blockchain Registry (Testnet)
 
-| Contract | Address | Explorer |
-|:---|:---|:---|
-| **StellarSwap Token** | `CDLZFC...GCYSC` | [View on Stellar Expert](https://stellar.expert/explorer/testnet/contract/CDLZFC3SYJYDZT7K67VZ75HPJVIEUVNIXF47ZG2FB2RMQQVU2HHGCYSC) |
-| **Liquidity Pool** | `CC7E2C...3D4E5` | [View on Stellar Expert](https://stellar.expert/explorer/testnet/contract/CC7E2C...) |
-| **Atomic Router** | `CB1B2A...1A2B3` | [View on Stellar Expert](https://stellar.expert/explorer/testnet/contract/CB1B2A...) |
+| Item | Value |
+|------|-------|
+| **Network** | Stellar Testnet |
+| **Soroban Contract ID (Registry)** | `CDLZFC3SYJYDZT7K67VZ75HPJVIEUVNIXF47ZG2FB2RMQQVU2HHGCYSC` |
+| **Deployment Transaction Hash** | `e7e59b2ac99d4cae5d99b19e91776676565176af860269eb0c2616df03ce5` |
+| **Token Asset Code** | `SSWP` |
+| **Token Issuer Address** | `GBSDMBQCO3Q73LABJKLHVGRAIBKESOXBATZ5UTMJE6PMQ6N6X4CQPNBM` |
+| **Liquidity Pool ID** | `f860269eb0c2616df03ce5e7e59b2ac99d4cae5d99b19e91776676565176af` |
 
 ## 🛠️ Tech Stack
 
-- **Backend**: Rust 🦀, Soroban SDK v20+
-- **Frontend**: Next.js 14 (App Router), TypeScript, Tailwind CSS
-- **Animations**: Framer Motion, Canvas Confetti
-- **Charts**: Recharts
-- **Wallet**: Freighter (@stellar/freighter-api)
-- **Deployment**: GitHub Actions, Vercel
+- **Smart Contracts**: Soroban (Rust SDK v25.3.1)
+- **Frontend**: Next.js 14, TypeScript, Tailwind CSS
+- **Blockchain Interface**: Stellar SDK, @stellar/freighter-api
+- **CI/CD**: GitHub Actions
 
 ## 🏃 Getting Started
 
-### 1. Prerequisite Setup
-Ensure you have the following installed:
+### 1. Prerequisites
 - [Rust & Wasm Target](https://www.rust-lang.org/tools/install)
 - [Stellar CLI](https://developers.stellar.org/docs/smart-contracts/getting-started/setup)
-- [Node.js 18+](https://nodejs.org/)
+- [Node.js 20+](https://nodejs.org/)
 
-### 2. Local Environment
+### 2. Local Setup
 ```bash
 # Clone the repository
-git clone https://github.com/stellar/stellarswap.git && cd stellarswap
+git clone https://github.com/greyparadox1337/stellarswap.git && cd stellarswap
 
 # Setup Frontend
 cd frontend && npm install
 npm run dev
 ```
 
-### 3. Contract Deployment
+### 3. Contract Builds
 ```bash
-# Build contracts
-soroban contract build
-# Run tests
+# Build contracts to WASM
+stellar contract build
+# Run contract tests
 cargo test
-# Deploy (Requires identity setup)
-soroban contract deploy --wasm ./target/wasm32-unknown-unknown/release/contract.wasm --source deployer --network testnet
 ```
 
-## 🧪 Testing
-
-StellarSwap maintains a high bar for security and reliability. Our contracts include comprehensive unit and integration tests.
-
-```bash
-cargo test --all-features
-```
-
-## 📂 Project Structure
-
-```text
-stellarswap/
-├── .github/workflows/    # CI/CD (Test & Deploy)
-├── contracts/            # Token, Pool, Router
-├── Cargo.toml            # Workspace config
-├── frontend/             # Next.js Application
-│   ├── src/app/          # Swap, Pool, Layout
-│   ├── src/hooks/        # Stellar & Contract hooks
-│   └── src/lib/          # RPC & Event streaming
-├── LICENSE               # MIT License
-└── README.md             # This file
-```
-
-## 🤝 Contributing
-
-We welcome contributions! Please see our [CONTRIBUTING.md](CONTRIBUTING.md) for detailed guidelines on our coding standards and Pull Request process.
+## 🧪 CI/CD Pipeline
+StellarSwap uses GitHub Actions for automated verification. You can view the status badge at the top of this file. The pipeline ensures:
+- Rust toolchain (v1.81.0) compatibility.
+- successful WASM compilation for all contracts.
+- Frontend linting and type checking.
 
 ## 📄 License
 

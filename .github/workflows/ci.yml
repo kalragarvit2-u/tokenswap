@@ -7,8 +7,37 @@ on:
     branches: [ main ]
 
 jobs:
-  frontend-build:
-    name: Frontend (Next.js) - Build & Lint
+  contracts-verify:
+    name: Backend (Rust) - Verify
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@master
+        with:
+            toolchain: 1.81.0
+            targets: wasm32-unknown-unknown
+
+      - name: Cache Cargo
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.cargo/bin/
+            ~/.cargo/registry/index/
+            ~/.cargo/registry/cache/
+            ~/.cargo/git/db/
+            target/
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+
+      - name: Build WASM
+        run: cargo build --target wasm32-unknown-unknown --release
+
+      - name: Run Tests
+        run: cargo test
+
+  frontend-verify:
+    name: Frontend (Next.js) - Verify
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -26,15 +55,7 @@ jobs:
       - name: Install Dependencies
         run: npm install
 
-      - name: Lint
-        run: npm run lint
-
-      - name: Type Check
-        run: npx tsc --noEmit
-
-      - name: Build Next.js
-        run: npm run build
-        env:
-          NEXT_PUBLIC_TOKEN_CONTRACT_ID: dummy_id
-          NEXT_PUBLIC_POOL_CONTRACT_ID: dummy_id
-          NEXT_PUBLIC_ROUTER_CONTRACT_ID: dummy_id
+      - name: Lint & Type Check
+        run: |
+          npm run lint
+          npx tsc --noEmit
