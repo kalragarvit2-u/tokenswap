@@ -12,7 +12,7 @@
 
 ---
 
-### 🚀 [Live Demo](https://blockchain-swap-kappa.vercel.app)
+### 🚀 [Live Demo](https://blockchain-swap-frontend.vercel.app/)
 
 Blockchain Swap is an institutional-grade Decentralized Exchange (DEX) protocol built on the Blockchain network using Soroban smart contracts. It enables seamless, atomic trading and liquidity provision with a high-fidelity user interface.
 
