@@ -5,7 +5,8 @@
 <div align="center">
   <p><strong>Trade at the Speed of Blockchain. Atomic. Transparent. Interconnected.</strong></p>
   
-  [![Blockchain Swap CI](https://github.com/greyparadox1337/blockchain-swap/actions/workflows/ci.yml/badge.svg)](https://github.com/greyparadox1337/blockchain-swap/actions/workflows/ci.yml)
+  [![Blockchain Swap CI](https://github.com/Garvitk06/blockchain-swap/actions/workflows/ci.yml/badge.svg)](https://github.com/Garvitk06/blockchain-swap/actions/workflows/ci.yml)
+  [![Vercel Deployment](https://img.shields.io/badge/Vercel-Deployed-black?style=flat&logo=vercel)](https://blockchain-swap-frontend.vercel.app/)
   [![License: MIT](https://img.shields.io/badge/License-MIT-purple.svg)](https://opensource.org/licenses/MIT)
   [![Network: Testnet](https://img.shields.io/badge/Network-Testnet-cyan.svg)](https://developers.stellar.org/docs/fundamentals-and-concepts/network-passphrases)
 </div>
@@ -56,7 +57,8 @@ graph TD
 |------|-------|:---:|
 | **Network** | Blockchain Testnet | [View Network](https://developers.stellar.org/docs/fundamentals-and-concepts/network-passphrases) |
 | **Token Asset Code** | `BSWP` | - |
-| **Token Issuer Address** | `GBSDMBQCO3Q73LABJKLHVGRAIBKESOXBATZ5UTMJE6PMQ6N6X4CQPNBM` | [Verify on Explorer](https://stellar.expert/explorer/testnet/account/GBSDMBQCO3Q73LABJKLHVGRAIBKESOXBATZ5UTMJE6PMQ6N6X4CQPNBM) |
+| **Token Issuer Address** | `GBSDMBQCO3Q73LABJKLHVGRAIBKESOXBATZ5UTMJE6PMQ6N6X4CQPNBM` | [Verify Issuer](https://stellar.expert/explorer/testnet/account/GBSDMBQCO3Q73LABJKLHVGRAIBKESOXBATZ5UTMJE6PMQ6N6X4CQPNBM) |
+| **Router Contract ID** | `CC...` | [Verify Router](https://stellar.expert/explorer/testnet/contract/CC...) |
 | **Liquidity Pool ID** | `f860269eb0c26...176af` | [Verify Hub](https://stellar.expert/explorer/testnet/account/GBSDMBQCO3Q73LABJKLHVGRAIBKESOXBATZ5UTMJE6PMQ6N6X4CQPNBM) |
 
 ## 🛠️ Tech Stack
