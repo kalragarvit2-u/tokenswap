@@ -5,11 +5,11 @@ import Pool from "@/models/Pool";
 export async function GET() {
   try {
     await connectDB();
-    const stats = await Pool.findOne({ poolId: "XLM-TKNA" });
+    const stats = await Pool.findOne({ poolId: "XLM-BKSWP" });
     return NextResponse.json(stats || { 
-      poolId: "XLM-TKNA",
+      poolId: "XLM-BKSWP",
       xlmReserve: "1000000",
-      tknaReserve: "50000",
+      bkswpReserve: "50000",
       totalShares: "100000",
       volume24h: 482000,
       tvlUSD: 2450000
@@ -24,7 +24,7 @@ export async function PATCH(req: Request) {
     await connectDB();
     const body = await req.json();
     const stats = await Pool.findOneAndUpdate(
-      { poolId: "XLM-TKNA" },
+      { poolId: "XLM-BKSWP" },
       { $set: body, lastUpdated: new Date() },
       { upsert: true, new: true }
     );

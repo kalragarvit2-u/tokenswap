@@ -25,12 +25,12 @@ export default function PriceChart() {
     <div className="h-full w-full flex flex-col">
       <div className="flex justify-between items-center mb-6 px-2">
         <div>
-          <div className="text-xs text-slate-400 uppercase font-bold tracking-widest mb-1">XLM / TKNA</div>
-          <div className="text-2xl font-bold text-slate-900">0.132 <span className="text-xs text-emerald-500 font-normal ml-1">+2.4%</span></div>
+          <div className="text-[10px] text-neutral-500 uppercase font-bold tracking-[0.2em] mb-1">XLM / BKSWP</div>
+          <div className="text-2xl font-bold text-white tracking-tighter">0.132 <span className="text-xs text-brand-green font-normal ml-1">+2.4%</span></div>
         </div>
-        <div className="flex gap-1">
+        <div className="flex gap-1 bg-white/5 p-1 rounded-xl border border-white/5">
           {["1H", "1D", "1W"].map(t => (
-            <button key={t} className={`px-2 py-1 rounded-md text-[10px] font-bold transition-colors ${t === "1D" ? "bg-brand-cyan text-white shadow-sm" : "hover:bg-slate-50 text-slate-400"}`}>
+            <button key={t} className={`px-3 py-1 rounded-lg text-[10px] font-bold transition-all ${t === "1D" ? "bg-brand-green text-black shadow-lg shadow-emerald-500/20" : "hover:bg-white/5 text-neutral-500"}`}>
               {t}
             </button>
           ))}
@@ -42,8 +42,8 @@ export default function PriceChart() {
           <LineChart data={MOCK_DATA}>
             <defs>
               <linearGradient id="lineGradient" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="#06B6D4" stopOpacity={0.2}/>
-                <stop offset="95%" stopColor="#06B6D4" stopOpacity={0}/>
+                <stop offset="5%" stopColor="#10b981" stopOpacity={0.2}/>
+                <stop offset="95%" stopColor="#10b981" stopOpacity={0}/>
               </linearGradient>
             </defs>
             <XAxis 
@@ -55,17 +55,17 @@ export default function PriceChart() {
               hide 
             />
             <Tooltip 
-              contentStyle={{ backgroundColor: '#ffffff', borderColor: '#e2e8f0', borderRadius: '12px', boxShadow: '0 10px 15px -3px rgba(0,0,0,0.1)' }}
-              itemStyle={{ color: '#0f172a', fontWeight: 'bold' }}
-              labelStyle={{ color: '#64748b' }}
+              contentStyle={{ backgroundColor: '#0a0a0a', borderColor: 'rgba(255,255,255,0.1)', borderRadius: '12px', boxShadow: '0 20px 25px -5px rgba(0,0,0,0.5)' }}
+              itemStyle={{ color: '#fff', fontWeight: 'bold' }}
+              labelStyle={{ color: '#6b7280' }}
             />
             <Line 
               type="monotone" 
               dataKey="price" 
-              stroke="#06B6D4" 
+              stroke="#10b981" 
               strokeWidth={3}
               dot={false}
-              activeDot={{ r: 6, fill: "#06B6D4" }}
+              activeDot={{ r: 6, fill: "#10b981", stroke: "#050505", strokeWidth: 2 }}
             />
           </LineChart>
         </ResponsiveContainer>

@@ -5,9 +5,9 @@
 @tailwind utilities;
 
 :root {
-  --foreground-rgb: 15, 23, 42;
-  --background-start-rgb: 255, 255, 255;
-  --background-end-rgb: 248, 250, 252;
+  --foreground-rgb: 255, 255, 255;
+  --background-start-rgb: 5, 5, 5;
+  --background-end-rgb: 10, 10, 10;
 }
 
 @layer base {
@@ -25,15 +25,32 @@
 
 @layer components {
   .glass {
-    @apply bg-white/70 backdrop-blur-xl border border-cyan-100 shadow-sm;
+    @apply bg-neutral-900/60 backdrop-blur-xl border border-white/10 shadow-lg;
   }
   
   .glass-hover {
-    @apply hover:bg-white/90 hover:border-cyan-200 hover:shadow-md transition-all duration-300;
+    @apply hover:bg-neutral-800/80 hover:border-white/20 hover:shadow-2xl transition-all duration-300;
   }
 
   .text-gradient {
-    @apply bg-clip-text text-transparent bg-gradient-to-r from-cyan-600 to-indigo-600;
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-emerald-400 to-rose-500;
+  }
+
+  .grain {
+    position: relative;
+  }
+  
+  .grain::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url("https://grainy-gradients.vercel.app/noise.svg");
+    filter: contrast(150%) brightness(100%);
+    opacity: 0.05;
+    pointer-events: none;
+    z-index: 1;
   }
 }
 
@@ -50,6 +67,10 @@
   animation: pulse 8s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
 
+.animate-scanner {
+  animation: scan 4s linear infinite;
+}
+
 @keyframes pulse {
   0%, 100% {
     opacity: 1;
@@ -58,3 +79,34 @@
     opacity: 0.5;
   }
 }
+
+@keyframes scan {
+  0% {
+    transform: translateY(-100%);
+  }
+  100% {
+    transform: translateY(200%);
+  }
+}
+
+.glow-line {
+  position: relative;
+  overflow: hidden;
+}
+
+.glow-line::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, theme('colors.emerald.500'), transparent);
+  animation: slide-right 3s linear infinite;
+}
+
+@keyframes slide-right {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+

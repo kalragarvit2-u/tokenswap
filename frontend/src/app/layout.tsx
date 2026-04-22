@@ -9,7 +9,7 @@ import { BlockchainProvider } from "@/context/BlockchainContext";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Blockchain Swap | Decentralized Exchange",
+  title: "Token Swap | Decentralized Exchange",
   description: "Swap tokens on the blockchain with Soroban smart contracts",
 };
 export default function RootLayout({

@@ -43,7 +43,7 @@ export const useAdmin = () => {
     const toastId = toast.loading("Preparing issuance transaction...");
     try {
       const account = await horizonServer.loadAccount(address);
-      const asset = new Asset("TKNA", ISSUER_ADDRESS);
+      const asset = new Asset("BKSWP", ISSUER_ADDRESS);
 
       const tx = new TransactionBuilder(account, {
         fee: BASE_FEE,
@@ -78,11 +78,15 @@ export const useAdmin = () => {
       
       const data = e.response?.data;
       const resultCodes = data?.extras?.result_codes;
+      const opResult = resultCodes?.operations?.[0];
+
       let errorMsg = resultCodes 
-        ? `Stellar Error: ${resultCodes.transaction}${resultCodes.operations ? ` (${resultCodes.operations[0]})` : ""}`
+        ? `Stellar Error: ${resultCodes.transaction}${opResult ? ` (${opResult})` : ""}`
         : (data?.detail || e.message || "Minting failed");
 
-      if (e.response?.status === 404) {
+      if (opResult === "op_no_trust") {
+        errorMsg = "Recipient has no trustline. Please initiate a trustline on the recipient wallet.";
+      } else if (e.response?.status === 404) {
         errorMsg = "Account not found. Please fund your wallet with XLM via a faucet.";
       }
 
@@ -102,49 +106,49 @@ export const useAdmin = () => {
       }
 
       const account = await horizonServer.loadAccount(address);
-      const tknaAsset = new Asset("TKNA", ISSUER_ADDRESS);
+      const bkswpAsset = new Asset("BKSWP", ISSUER_ADDRESS);
       const xlmAsset = Asset.native();
 
       // Diagnostic: Check balances
       const xlmBalance = parseFloat(account.balances.find((b: any) => b.asset_type === "native")?.balance || "0");
-      const tknaBalance = parseFloat(account.balances.find((b: any) => b.asset_code === "TKNA")?.balance || "0");
+      const bkswpBalance = parseFloat(account.balances.find((b: any) => b.asset_code === "BKSWP")?.balance || "0");
 
       if (xlmBalance < 105) {
         throw new Error(`Insufficient XLM: You have ${xlmBalance} XLM, but need at least 105 XLM for the liquidity offers and reserves. Please use a faucet.`);
       }
 
-      if (tknaBalance < 100) {
-        throw new Error(`Insufficient TKNA: You have ${tknaBalance} TKNA, but need 100 for the sell offer. Please Mint tokens from the Issuer first.`);
+      if (bkswpBalance < 100) {
+        throw new Error(`Insufficient BKSWP: You have ${bkswpBalance} BKSWP, but need 100 for the sell offer. Please Mint tokens from the Issuer first.`);
       }
 
       const tx = new TransactionBuilder(account, {
         fee: BASE_FEE,
         networkPassphrase: NETWORK_DETAILS.networkPassphrase,
       })
-        // 1. Ensure Trustline: Needed for the non-issuer MM account to receive TKNA
+        // 1. Ensure Trustline: Needed for the non-issuer MM account to receive BKSWP
         .addOperation(
           Operation.changeTrust({
-            asset: tknaAsset,
+            asset: bkswpAsset,
             limit: "1000000"
           })
         )
-        // 2. Offer: Sell TKNA for XLM (Providing TKNA liquidity)
+        // 2. Offer: Sell BKSWP for XLM (Providing BKSWP liquidity)
         .addOperation(
           Operation.manageSellOffer({
-            selling: tknaAsset,
+            selling: bkswpAsset,
             buying: xlmAsset,
             amount: "100",
-            price: "2.0", // Sell 1 TKNA for 2 XLM
+            price: "2.0", // Sell 1 BKSWP for 2 XLM
             offerId: "0" 
           })
         )
-        // 3. Offer: Sell XLM for TKNA (Providing XLM liquidity)
+        // 3. Offer: Sell XLM for BKSWP (Providing XLM liquidity)
         .addOperation(
           Operation.manageSellOffer({
             selling: xlmAsset,
-            buying: tknaAsset,
+            buying: bkswpAsset,
             amount: "100",
-            price: "2.0", // Sell 1 XLM for 2 TKNA (Buy 1 TKNA for 0.5 XLM)
+            price: "2.0", // Sell 1 XLM for 2 BKSWP (Buy 1 BKSWP for 0.5 XLM)
             offerId: "0"
           })
         )
@@ -201,7 +205,7 @@ export const useAdmin = () => {
     const toastId = toast.loading("Initializing Wallet: Creating trustline...");
     try {
       const account = await horizonServer.loadAccount(address);
-      const tknaAsset = new Asset("TKNA", ISSUER_ADDRESS);
+      const bkswpAsset = new Asset("BKSWP", ISSUER_ADDRESS);
 
       const tx = new TransactionBuilder(account, {
         fee: BASE_FEE,
@@ -209,7 +213,7 @@ export const useAdmin = () => {
       })
         .addOperation(
           Operation.changeTrust({
-            asset: tknaAsset,
+            asset: bkswpAsset,
             limit: "1000000"
           })
         )
@@ -227,7 +231,7 @@ export const useAdmin = () => {
 
       toast.success("Wallet Initialized!", { 
         id: toastId,
-        description: "You are now ready to receive TKNA tokens."
+        description: "You are now ready to receive BKSWP tokens."
       });
       return { status: "SUCCESS", hash: result.hash };
     } catch (e: any) {

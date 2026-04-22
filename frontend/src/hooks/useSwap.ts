@@ -23,13 +23,22 @@ export const useSwap = () => {
     const toastId = toast.loading("Preparing transaction...");
 
     try {
+      // 0. Safety Check for numeric values
+      if (isNaN(Number(amountIn)) || isNaN(Number(minOut))) {
+        throw new Error("Invalid transaction parameters (NaN reached hook)");
+      }
+
       // 1. Classic DEX Fallback (Blockchain Traditional DEX)
-      if (!CONTRACT_IDS.router || CONTRACT_IDS.router.includes("...") || !CONTRACT_IDS.router.startsWith("C")) {
+      const isSorobanReady = 
+        CONTRACT_IDS.router?.length === 56 && CONTRACT_IDS.router.startsWith("C") && !CONTRACT_IDS.router.includes("...") &&
+        CONTRACT_IDS.pool?.length === 56 && CONTRACT_IDS.pool.startsWith("C") && !CONTRACT_IDS.pool.includes("...");
+
+      if (!isSorobanReady) {
         console.log("Using Classic DEX Path Payment fallback...");
         
         const account = await horizonServer.loadAccount(userAddress);
-        const assetIn = tokenIn === "XLM" ? Asset.native() : new Asset("TKNA", ISSUER_ADDRESS);
-        const assetOut = tokenIn === "XLM" ? new Asset("TKNA", ISSUER_ADDRESS) : Asset.native();
+        const assetIn = tokenIn === "XLM" ? Asset.native() : new Asset("BKSWP", ISSUER_ADDRESS);
+        const assetOut = tokenIn === "XLM" ? new Asset("BKSWP", ISSUER_ADDRESS) : Asset.native();
 
         // Convert scaled integer strings (raw amounts) back to decimal strings for Classic Operations
         const decAmountIn = (BigInt(amountIn).toString().padStart(8, '0'));
@@ -181,6 +190,8 @@ export const useSwap = () => {
 
       if (errorMsg.includes("op_too_few_offers")) {
         errorMsg = "Market not initialized. Please go to Admin Hub and click 'Seed DEX Liquidity'.";
+      } else if (errorMsg.includes("op_under_dest_min")) {
+        errorMsg = "Slippage error: The price moved against you by more than your limit. Try increasing 'Slippage' in settings.";
       }
 
       toast.error("Transaction Failed", {
@@ -200,8 +211,8 @@ export const useSwap = () => {
 
   const getSwapQuote = async (tokenIn: string, amountIn: string, tokenOut: string) => {
     try {
-      const assetIn = tokenIn === "XLM" ? Asset.native() : new Asset("TKNA", ISSUER_ADDRESS);
-      const assetOut = tokenOut === "XLM" ? Asset.native() : new Asset("TKNA", ISSUER_ADDRESS);
+      const assetIn = tokenIn === "XLM" ? Asset.native() : new Asset("BKSWP", ISSUER_ADDRESS);
+      const assetOut = tokenOut === "XLM" ? Asset.native() : new Asset("BKSWP", ISSUER_ADDRESS);
       
       // Convert scaled integer string to decimal for Horizon API
       const decAmountIn = (BigInt(amountIn).toString().padStart(8, '0'));

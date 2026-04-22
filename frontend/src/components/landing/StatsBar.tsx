@@ -3,15 +3,16 @@
 import { motion } from "framer-motion";
 
 const stats = [
-  { label: "Total Value Locked", value: "$42.8M", color: "text-violet-400" },
-  { label: "24h Volume", value: "$12.4M", color: "text-cyan-400" },
-  { label: "Total Swaps", value: "842k+", color: "text-white" },
-  { label: "Active Pools", value: "128", color: "text-zinc-400" },
+  { label: "Core Liquidity", value: "$42.8M", color: "text-emerald-400" },
+  { label: "Daily Pulse", value: "$12.4M", color: "text-rose-500" },
+  { label: "Stellar Swaps", value: "842k+", color: "text-white" },
+  { label: "Active Nexus", value: "128", color: "text-neutral-400" },
 ];
 
 export default function StatsBar() {
   return (
-    <div id="stats" className="py-12 border-y border-white/5 bg-white/[0.02]">
+    <div id="stats" className="relative py-12 border-y border-white/5 bg-white/[0.02] overflow-hidden">
+      <div className="absolute inset-0 bg-emerald-500/5 animate-pulse-slow pointer-events-none" />
       <div className="max-w-7xl mx-auto px-6 grid grid-cols-2 lg:grid-cols-4 gap-8">
         {stats.map((stat, i) => (
           <motion.div 

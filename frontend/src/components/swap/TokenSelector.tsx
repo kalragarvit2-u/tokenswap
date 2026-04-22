@@ -6,9 +6,7 @@ import { useState } from "react";
 
 const TOKENS = [
   { id: "XLM", name: "Native Tokens", symbol: "XLM", logo: "🚀" },
-  { id: "TKNA", name: "Alpha Token", symbol: "TKNA", logo: "🧪" },
-  { id: "TKNB", name: "Beta Token", symbol: "TKNB", logo: "⚡" },
-  { id: "USDC", name: "USD Coin", symbol: "USDC", logo: "💵" },
+  { id: "BKSWP", name: "Blockchain Swap", symbol: "BKSWP", logo: "🧪" },
 ];
 
 export default function TokenSelector({ 
@@ -38,29 +36,30 @@ export default function TokenSelector({
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={onClose}
-            className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-[100]"
+            className="fixed inset-0 bg-black/60 backdrop-blur-md z-[100]"
           />
           <motion.div 
             initial={{ opacity: 0, y: 100, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 100, scale: 0.95 }}
-            className="fixed bottom-0 md:bottom-auto md:top-1/2 md:left-1/2 md:-translate-x-1/2 md:-translate-y-1/2 w-full max-w-md bg-white border border-slate-200 rounded-t-3xl md:rounded-3xl p-6 z-[101] shadow-2xl"
+            className="fixed bottom-0 md:bottom-auto md:top-1/2 md:left-1/2 md:-translate-x-1/2 md:-translate-y-1/2 w-full max-w-md bg-neutral-950 border border-white/10 rounded-t-3xl md:rounded-3xl p-6 z-[101] shadow-2xl overflow-hidden relative"
           >
+            <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-emerald-500/20 to-transparent" />
             <div className="flex justify-between items-center mb-6">
-              <h2 className="text-xl font-bold text-slate-900">Select a Token</h2>
-              <button onClick={onClose} className="p-2 hover:bg-slate-100 rounded-xl transition-colors">
-                <X size={20} className="text-slate-500" />
+              <h2 className="text-xl font-bold text-white tracking-tight">Select a Token</h2>
+              <button onClick={onClose} className="p-2 hover:bg-white/5 rounded-xl transition-colors">
+                <X size={20} className="text-neutral-500" />
               </button>
             </div>
 
             <div className="relative mb-6">
-              <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-neutral-600" size={18} />
               <input 
                 type="text" 
                 placeholder="Search name or address"
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                className="w-full bg-slate-50 border border-slate-200 rounded-2xl py-3 pl-12 pr-4 outline-none focus:border-brand-cyan transition-colors text-slate-900 placeholder:text-slate-300"
+                className="w-full bg-white/5 border border-white/10 rounded-2xl py-3 pl-12 pr-4 outline-none focus:border-brand-green transition-colors text-white placeholder:text-neutral-700"
               />
             </div>
 
@@ -69,20 +68,20 @@ export default function TokenSelector({
                 <button
                   key={token.id}
                   onClick={() => { onSelect(token); onClose(); }}
-                  className={`w-full p-4 rounded-2xl flex items-center justify-between hover:bg-slate-50 transition-all ${
-                    selectedToken === token.id ? "bg-cyan-50 border border-brand-cyan/20" : "border border-transparent"
+                  className={`w-full p-4 rounded-2xl flex items-center justify-between hover:bg-white/5 transition-all ${
+                    selectedToken === token.id ? "bg-emerald-500/10 border border-emerald-500/20" : "border border-transparent"
                   }`}
                 >
                   <div className="flex items-center gap-4">
-                    <div className="text-2xl w-10 h-10 flex items-center justify-center bg-slate-100 rounded-xl">
+                    <div className="text-2xl w-10 h-10 flex items-center justify-center bg-white/5 border border-white/5 rounded-xl">
                       {token.logo}
                     </div>
                     <div className="text-left">
-                      <div className="font-bold text-slate-900">{token.symbol}</div>
-                      <div className="text-xs text-slate-500">{token.name}</div>
+                      <div className="font-bold text-white tracking-tight">{token.symbol}</div>
+                      <div className="text-xs text-neutral-500">{token.name}</div>
                     </div>
                   </div>
-                  {selectedToken === token.id && <Check size={18} className="text-brand-cyan" />}
+                  {selectedToken === token.id && <Check size={18} className="text-brand-green" />}
                 </button>
               ))}
             </div>

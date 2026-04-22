@@ -29,7 +29,7 @@ fn test_liquidity_pool_lifecycle() {
         &admin,
         &7,
         &String::from_str(&e, "Token A"),
-        &String::from_str(&e, "TKNA"),
+        &String::from_str(&e, "BKSWP"),
     );
     token_b.initialize(
         &admin,

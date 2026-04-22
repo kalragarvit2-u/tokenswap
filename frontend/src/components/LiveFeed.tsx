@@ -15,15 +15,15 @@ import { useRealtimeEvents } from "@/hooks/useRealtimeEvents";
 
 export default function LiveFeed() {
   const { events, isConnected } = useRealtimeEvents();
-  const [isCollapsed, setIsCollapsed] = useState(false);
+  const [isCollapsed, setIsCollapsed] = useState(true);
   const [isSoundEnabled, setIsSoundEnabled] = useState(false);
 
   const getEventIcon = (type: string) => {
     switch (type) {
-      case "swap": return <ArrowRightLeft size={14} className="text-cyan-400" />;
-      case "deposit": return <PlusCircle size={14} className="text-green-400" />;
-      case "withdraw": return <MinusCircle size={14} className="text-red-400" />;
-      case "transfer": return <Send size={14} className="text-violet-400" />;
+      case "swap": return <ArrowRightLeft size={14} className="text-emerald-400" />;
+      case "deposit": return <PlusCircle size={14} className="text-emerald-500" />;
+      case "withdraw": return <MinusCircle size={14} className="text-rose-500" />;
+      case "transfer": return <Send size={14} className="text-emerald-300" />;
       default: return <Radio size={14} className="text-zinc-400" />;
     }
   };
@@ -42,28 +42,28 @@ export default function LiveFeed() {
     return (
       <button 
         onClick={() => setIsCollapsed(false)}
-        className="fixed top-24 right-4 md:right-6 bg-white p-3 rounded-full hover:scale-110 active:scale-95 transition-all z-[100] shadow-xl border border-slate-200"
+        className="fixed top-24 right-4 md:right-6 bg-neutral-900 p-3 rounded-full hover:scale-110 active:scale-95 transition-all z-[100] shadow-xl border border-white/10"
       >
-        <Radio size={20} className={isConnected ? "text-brand-cyan animate-pulse" : "text-slate-400"} />
+        <Radio size={20} className={isConnected ? "text-brand-green animate-pulse" : "text-neutral-500"} />
       </button>
     );
   }
 
   return (
-    <div className="fixed top-24 right-4 md:right-6 w-[280px] md:w-[320px] max-h-[calc(100vh-140px)] bg-white/90 backdrop-blur-xl rounded-3xl z-[100] flex flex-col shadow-2xl border border-slate-200">
-      <div className="p-4 border-b border-slate-100 flex items-center justify-between">
+    <div className="fixed top-24 right-4 md:right-6 w-[280px] md:w-[320px] max-h-[calc(100vh-140px)] bg-neutral-900/90 backdrop-blur-xl rounded-3xl z-[100] flex flex-col shadow-2xl border border-white/10">
+      <div className="p-4 border-b border-white/5 flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <div className={`w-2 h-2 rounded-full ${isConnected ? "bg-brand-cyan animate-pulse" : "bg-slate-300"}`} />
-          <span className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Blockchain Feed</span>
+          <div className={`w-2 h-2 rounded-full ${isConnected ? "bg-brand-green animate-pulse" : "bg-neutral-800"}`} />
+          <span className="text-[10px] font-bold uppercase tracking-widest text-neutral-500">Blockchain Feed</span>
         </div>
         <div className="flex items-center gap-1">
           <button 
             onClick={() => setIsSoundEnabled(!isSoundEnabled)}
-            className={`p-1.5 rounded-lg transition-colors ${isSoundEnabled ? "text-brand-cyan bg-cyan-50" : "text-slate-400 hover:bg-slate-50"}`}
+            className={`p-1.5 rounded-lg transition-colors ${isSoundEnabled ? "text-brand-green bg-emerald-500/10" : "text-neutral-500 hover:bg-white/5"}`}
           >
              <Radio size={14} />
           </button>
-          <button onClick={() => setIsCollapsed(true)} className="p-1.5 hover:bg-slate-50 rounded-lg text-slate-400">
+          <button onClick={() => setIsCollapsed(true)} className="p-1.5 hover:bg-white/5 rounded-lg text-neutral-500">
             <X size={16} />
           </button>
         </div>
@@ -80,15 +80,15 @@ export default function LiveFeed() {
                 animate={{ opacity: 1, y: 0, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.95 }}
                 transition={{ type: "spring", stiffness: 400, damping: 30 }}
-                className="p-3 rounded-2xl bg-slate-50 border border-slate-100 hover:border-brand-cyan/30 transition-colors group relative overflow-hidden"
+                className="p-3 rounded-2xl bg-white/5 border border-white/5 hover:border-brand-green/30 transition-colors group relative overflow-hidden"
               >
                 <div className="flex justify-between items-start mb-2">
                   <div className="flex items-center gap-2">
                     {getEventIcon(event.type)}
                     <span className={`text-[9px] font-bold tracking-tighter ${
-                      event.type === 'swap' ? 'text-brand-cyan' : 
-                      event.type === 'deposit' ? 'text-emerald-600' : 
-                      event.type === 'withdraw' ? 'text-rose-600' : 'text-slate-400'
+                      event.type === 'swap' ? 'text-brand-green' : 
+                      event.type === 'deposit' ? 'text-emerald-400' : 
+                      event.type === 'withdraw' ? 'text-rose-500' : 'text-neutral-500'
                     }`}>
                       {getEventLabel(event.type)}
                     </span>
@@ -98,15 +98,15 @@ export default function LiveFeed() {
                     target="_blank"
                     className="opacity-0 group-hover:opacity-100 transition-opacity"
                   >
-                    <ExternalLink size={10} className="text-slate-400 hover:text-brand-cyan" />
+                    <ExternalLink size={10} className="text-neutral-500 hover:text-brand-green" />
                   </a>
                 </div>
                 
                 <div className="flex flex-col gap-1">
-                  <div className="text-[10px] font-mono text-slate-400">
-                    User: <span className="text-slate-900">{event.user.slice(0, 6)}...{event.user.slice(-4)}</span>
+                  <div className="text-[10px] font-mono text-neutral-500">
+                    User: <span className="text-white">{event.user.slice(0, 6)}...{event.user.slice(-4)}</span>
                   </div>
-                  <div className="text-xs font-bold truncate text-slate-900">
+                  <div className="text-xs font-bold truncate text-white">
                     {event.type === 'swap' ? (
                        <span>{Number(event.data.amountIn) / 1e7} XLM → {Number(event.data.amountOut) / 1e7} BSWP</span>
                     ) : event.type === 'deposit' ? (
@@ -119,7 +119,7 @@ export default function LiveFeed() {
               </motion.div>
             ))
           ) : (
-            <div className="h-40 flex flex-col items-center justify-center text-slate-300 gap-3">
+            <div className="h-40 flex flex-col items-center justify-center text-neutral-800 gap-3">
                <Radio size={32} className="opacity-20 animate-pulse" />
                <p className="text-[10px] uppercase font-bold tracking-[0.2em] opacity-40">Listening...</p>
             </div>
@@ -127,8 +127,8 @@ export default function LiveFeed() {
         </AnimatePresence>
       </div>
 
-      <div className="p-3 bg-slate-50/50 border-t border-slate-100 text-center">
-         <p className="text-[9px] text-slate-400 font-mono italic">Subscribed to Network getEvents</p>
+      <div className="p-3 bg-white/5 border-t border-white/5 text-center">
+         <p className="text-[9px] text-neutral-600 font-mono italic">Subscribed to Network getEvents</p>
       </div>
     </div>
   );

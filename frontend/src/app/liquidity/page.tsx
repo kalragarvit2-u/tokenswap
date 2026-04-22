@@ -33,12 +33,12 @@ export default function LiquidityPage() {
   const [hasTrustB, setHasTrustB] = useState(true);
   const [isCheckingTrust, setIsCheckingTrust] = useState(false);
 
-  // Check trustline for Asset B (TKNA)
+  // Check trustline for Asset B (BKSWP)
   useEffect(() => {
     const verifyTrust = async () => {
       if (!address) return;
       setIsCheckingTrust(true);
-      const trusted = await checkAssetTrust("TKNA");
+      const trusted = await checkAssetTrust("BKSWP");
       setHasTrustB(trusted);
       setIsCheckingTrust(false);
     };
@@ -57,15 +57,15 @@ export default function LiquidityPage() {
   const handleDeposit = async () => {
     if (!address) return connect();
 
-    // Step 1: Trustline Check for TKNA
+    // Step 1: Trustline Check for BKSWP
     if (!hasTrustB) {
       if (balances.XLM < 1.0) {
         toast.error("Insufficient XLM balance to enable token (requires at least 1 XLM)");
         return;
       }
-      const success = await setupTrustline("TKNA");
+      const success = await setupTrustline("BKSWP");
       if (success) {
-        const trusted = await checkAssetTrust("TKNA", undefined, 5);
+        const trusted = await checkAssetTrust("BKSWP", undefined, 5);
         setHasTrustB(trusted);
         refreshBalances();
       }
@@ -84,22 +84,22 @@ export default function LiquidityPage() {
   };
 
   return (
-    <div className="bg-white min-h-screen text-slate-900 pt-32 pb-20 selection:bg-brand-cyan/20 overflow-x-hidden">
+    <div className="bg-[#050505] min-h-screen text-white pt-32 pb-20 selection:bg-brand-green/20 overflow-x-hidden grain">
       <Navbar />
-      <div className="absolute top-0 left-0 w-full h-[600px] bg-[radial-gradient(circle_at_50%_0%,rgba(6,182,212,0.05),transparent_70%)] pointer-events-none" />
+      <div className="absolute top-0 left-0 w-full h-[600px] bg-[radial-gradient(circle_at_50%_0%,rgba(16,185,129,0.05),transparent_70%)] pointer-events-none" />
 
       <div className="max-w-7xl mx-auto px-6 relative z-10">
         <div className="flex flex-col md:flex-row justify-between items-end gap-6 mb-12">
            <div>
               <div className="flex items-center gap-3 mb-2">
-                 <Droplets className="text-brand-cyan" size={32} />
-                 <h1 className="text-4xl font-bold tracking-tight text-slate-900">Manage Liquidity</h1>
+                 <Droplets className="text-brand-green" size={32} />
+                 <h1 className="text-4xl font-bold tracking-tight text-white tracking-tighter">Manage Liquidity</h1>
               </div>
-              <p className="text-slate-500 max-w-lg font-medium">
-                Add assets to the protocol to earn 0.3% trading fees. Manage your share of the liquidity pool.
+              <p className="text-neutral-500 max-w-lg font-medium italic">
+                Provision assets to the protocol to earn 0.3% protocol fees.
               </p>
            </div>
-           <StatusBadge type="live">XLM / TKNA Pool</StatusBadge>
+           <StatusBadge type="live">XLM / BKSWP Pool</StatusBadge>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
@@ -107,84 +107,85 @@ export default function LiquidityPage() {
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
                  
                  {/* Liquidity Management Card */}
-                 <GlassCard className="p-8 bg-white border-slate-200">
-                    <div className="flex p-1 bg-slate-100 rounded-2xl gap-1 mb-10 w-full">
+                 <GlassCard className="p-8 bg-neutral-900/60 border-white/10 relative overflow-hidden">
+                    <div className="absolute top-0 left-1/2 -translate-x-1/2 w-4/5 h-px bg-gradient-to-r from-transparent via-emerald-500/20 to-transparent" />
+                    <div className="flex p-1 bg-white/5 rounded-2xl gap-1 mb-10 w-full border border-white/5">
                       <button 
                         onClick={() => setActiveTab("add")}
-                        className={`relative flex-1 py-3 rounded-xl font-bold text-sm transition-all flex items-center justify-center gap-2 ${activeTab === "add" ? "text-white" : "text-slate-500 hover:text-slate-700"}`}
+                        className={`relative flex-1 py-3 rounded-xl font-bold text-sm transition-all flex items-center justify-center gap-2 ${activeTab === "add" ? "text-black" : "text-neutral-500 hover:text-neutral-300"}`}
                       >
-                        {activeTab === "add" && <motion.div layoutId="tab-bg" className="absolute inset-0 bg-slate-900 rounded-xl shadow-lg" />}
-                        <span className="relative z-10 flex items-center gap-2"><Plus size={16}/> Add Liquidity</span>
+                        {activeTab === "add" && <motion.div layoutId="tab-bg" className="absolute inset-0 bg-brand-green rounded-xl shadow-lg shadow-emerald-500/20" />}
+                        <span className="relative z-10 flex items-center gap-2"><Plus size={16}/> Add</span>
                       </button>
                       <button 
                         onClick={() => setActiveTab("remove")}
-                        className={`relative flex-1 py-3 rounded-xl font-bold text-sm transition-all flex items-center justify-center gap-2 ${activeTab === "remove" ? "text-white" : "text-slate-500 hover:text-slate-700"}`}
+                        className={`relative flex-1 py-3 rounded-xl font-bold text-sm transition-all flex items-center justify-center gap-2 ${activeTab === "remove" ? "text-white" : "text-neutral-500 hover:text-neutral-300"}`}
                       >
-                        {activeTab === "remove" && <motion.div layoutId="tab-bg" className="absolute inset-0 bg-slate-900 rounded-xl shadow-lg" />}
-                        <span className="relative z-10 flex items-center gap-2"><Minus size={16}/> Remove Liquidity</span>
+                        {activeTab === "remove" && <motion.div layoutId="tab-bg" className="absolute inset-0 bg-neutral-800 rounded-xl shadow-lg" />}
+                        <span className="relative z-10 flex items-center gap-2"><Minus size={16}/> Remove</span>
                       </button>
                     </div>
 
                     <AnimatePresence mode="wait">
                       {activeTab === "add" ? (
                         <motion.div key="add" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="space-y-4">
-                          <div className="p-6 rounded-3xl bg-slate-50 border border-slate-100">
+                          <div className="p-6 rounded-3xl bg-black/40 border border-white/5">
                               <div className="flex justify-between items-center mb-4">
-                                <span className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Input Asset A</span>
-                                <span className="text-[10px] font-medium text-slate-400">Balance: {balances.XLM || 0}</span>
+                                <span className="text-[10px] font-bold uppercase tracking-widest text-neutral-500">Asset_Alpha_In</span>
+                                <span className="text-[10px] font-medium text-neutral-600">Balance: {balances.XLM || 0}</span>
                               </div>
                              <div className="flex justify-between items-center gap-4">
-                                <input type="number" placeholder="0.00" value={amountA} onChange={(e) => setAmountA(e.target.value)} className="bg-transparent text-3xl font-bold outline-none w-full text-slate-900" />
-                                <div className="flex items-center gap-2 bg-white px-4 py-2 rounded-xl border border-slate-200 font-bold text-slate-900 shadow-sm">🚀 XLM</div>
+                                <input type="number" placeholder="0.00" value={amountA} onChange={(e) => setAmountA(e.target.value)} className="bg-transparent text-3xl font-bold outline-none w-full text-white tracking-tighter" />
+                                <div className="flex items-center gap-2 bg-white/5 px-4 py-2 rounded-xl border border-white/10 font-bold text-white shadow-sm">🚀 XLM</div>
                              </div>
                           </div>
                           <div className="flex justify-center -my-3 relative z-20">
-                             <div className="p-2 rounded-xl bg-white border border-slate-200 text-brand-cyan shadow-sm"><Plus size={16} /></div>
+                             <div className="p-2 rounded-xl bg-neutral-900 border border-white/10 text-brand-green shadow-xl"><Plus size={16} /></div>
                           </div>
-                          <div className="p-6 rounded-3xl bg-slate-50 border border-slate-100">
+                          <div className="p-6 rounded-3xl bg-black/40 border border-white/5">
                               <div className="flex justify-between items-center mb-4">
-                                <span className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Calculated Asset B</span>
-                                <span className="text-[10px] font-medium text-slate-400">Balance: {balances.TKNA || 0}</span>
+                                <span className="text-[10px] font-bold uppercase tracking-widest text-neutral-500">Asset_Beta_Out</span>
+                                <span className="text-[10px] font-medium text-neutral-600">Balance: {balances.BKSWP || 0}</span>
                               </div>
                              <div className="flex justify-between items-center gap-4">
-                                <input type="number" placeholder="0.00" value={amountB} readOnly className="bg-transparent text-3xl font-bold outline-none w-full text-slate-400" />
-                                <div className="flex items-center gap-2 bg-white px-4 py-2 rounded-xl border border-slate-200 font-bold text-slate-900 shadow-sm">🧪 TKNA</div>
+                                <input type="number" placeholder="0.00" value={amountB} readOnly className="bg-transparent text-3xl font-bold outline-none w-full text-neutral-700 tracking-tighter" />
+                                <div className="flex items-center gap-2 bg-white/5 px-4 py-2 rounded-xl border border-white/10 font-bold text-white shadow-sm">🧪 BKSWP</div>
                              </div>
                           </div>
                           <button 
                              onClick={handleDeposit} 
                              disabled={actionLoading || !amountA || isCheckingTrust} 
-                             className="w-full py-5 rounded-2xl bg-brand-cyan text-white font-extrabold text-lg mt-8 hover:shadow-[0_10px_20px_rgba(6,182,212,0.3)] transition-all flex items-center justify-center gap-2 disabled:opacity-50 active:scale-[0.98]"
+                             className="w-full py-5 rounded-2xl bg-brand-green text-black font-extrabold text-lg mt-8 shadow-lg shadow-emerald-500/20 hover:shadow-emerald-500/40 transition-all flex items-center justify-center gap-2 disabled:opacity-50 active:scale-[0.98]"
                           >
                             {actionLoading || isCheckingTrust ? (
                               <Loader2 className="animate-spin" />
                             ) : !address ? (
-                              "Connect Wallet"
+                              "Initialize_Wallet"
                             ) : !hasTrustB ? (
-                              "Enable TKNA"
+                              "Enable_BKSWP"
                             ) : (
-                              "Add Liquidity"
+                              "Provision_Liquidity"
                             )}
                           </button>
                         </motion.div>
                       ) : (
                         <motion.div key="remove" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="space-y-8">
-                          <div className="text-center p-8 rounded-3xl bg-slate-50 border border-slate-100">
-                              <div className="text-5xl font-bold mb-2 text-slate-900">{removePercent}%</div>
-                              <input type="range" min="0" max="100" value={removePercent} onChange={(e) => setRemovePercent(parseInt(e.target.value))} className="w-full mt-8 accent-brand-cyan" />
+                          <div className="text-center p-8 rounded-3xl bg-black/40 border border-white/5">
+                              <div className="text-5xl font-bold mb-2 text-white">{removePercent}%</div>
+                              <input type="range" min="0" max="100" value={removePercent} onChange={(e) => setRemovePercent(parseInt(e.target.value))} className="w-full mt-8 accent-brand-green" />
                           </div>
                           <div className="grid grid-cols-2 gap-4">
-                              <div className="p-4 rounded-2xl bg-slate-50 border border-slate-100">
-                                  <div className="text-[10px] text-slate-400 font-bold mb-1 uppercase">XLM to Receive</div>
-                                  <div className="text-xl font-bold text-slate-900">{(Number(userShares) * removePercent / 1e9).toFixed(2)}</div>
+                              <div className="p-4 rounded-2xl bg-black/40 border border-white/5 text-center">
+                                  <div className="text-[10px] text-neutral-500 font-bold mb-1 uppercase tracking-tight">XLM_RECOVER</div>
+                                  <div className="text-xl font-bold text-white font-mono">{(Number(userShares) * removePercent / 1e9).toFixed(2)}</div>
                               </div>
-                              <div className="p-4 rounded-2xl bg-slate-50 border border-slate-100">
-                                  <div className="text-[10px] text-slate-400 font-bold mb-1 uppercase">TKNA to Receive</div>
-                                  <div className="text-xl font-bold text-slate-900">{(Number(userShares) * removePercent / 1e9).toFixed(2)}</div>
+                              <div className="p-4 rounded-2xl bg-black/40 border border-white/5 text-center">
+                                  <div className="text-[10px] text-neutral-500 font-bold mb-1 uppercase tracking-tight">BKSWP_RECOVER</div>
+                                  <div className="text-xl font-bold text-white font-mono">{(Number(userShares) * removePercent / 1e9).toFixed(2)}</div>
                               </div>
                           </div>
-                          <button onClick={handleWithdraw} disabled={actionLoading || userShares === BigInt(0)} className="w-full py-5 rounded-2xl bg-red-50 text-red-600 border border-red-100 font-extrabold text-lg hover:bg-red-500 hover:text-white transition-all disabled:opacity-30 active:scale-[0.98]">
-                            {actionLoading ? <Loader2 className="animate-spin" /> : "Remove Assets"}
+                          <button onClick={handleWithdraw} disabled={actionLoading || userShares === BigInt(0)} className="w-full py-5 rounded-2xl bg-brand-red/10 text-brand-red border border-brand-red/20 font-extrabold text-lg hover:bg-brand-red hover:text-white transition-all disabled:opacity-30 active:scale-[0.98]">
+                            {actionLoading ? <Loader2 className="animate-spin" /> : "Decommission_Assets"}
                           </button>
                         </motion.div>
                       )}
@@ -193,39 +194,40 @@ export default function LiquidityPage() {
 
                  {/* Position Information Overlay */}
                  <div className="space-y-8">
-                    <GlassCard className="p-8 relative overflow-hidden group bg-white border-slate-200">
-                        <div className="absolute top-0 right-0 w-32 h-32 bg-cyan-50 rounded-full blur-3xl -translate-y-16 translate-x-16 group-hover:bg-cyan-100 transition-all" />
-                        <h3 className="font-bold mb-6 flex items-center gap-2 text-sm uppercase tracking-widest text-slate-400"><Wallet size={16} /> Active Position</h3>
+                    <GlassCard className="p-8 relative overflow-hidden group bg-neutral-900/60 border-white/10">
+                        <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-500/5 rounded-full blur-3xl -translate-y-16 translate-x-16 group-hover:bg-emerald-500/10 transition-all" />
+                        <h3 className="font-bold mb-6 flex items-center gap-2 text-sm uppercase tracking-widest text-neutral-500"><Wallet size={16} /> Active Position</h3>
                         {address ? (
                            <div className="space-y-8">
                               <div className="flex justify-between items-end">
                                  <div>
-                                    <div className="text-xs text-slate-500 mb-1 font-medium">Your Total Share</div>
-                                    <div className="text-4xl font-bold font-mono text-brand-cyan">{totalShares > 0 ? ((Number(userShares) / Number(totalShares)) * 100).toFixed(2) : "0.00"}%</div>
+                                    <div className="text-xs text-neutral-500 mb-1 font-medium italic">POOL_OWNERSHIP</div>
+                                    <div className="text-4xl font-bold font-mono text-brand-green tracking-tighter">{totalShares > 0 ? ((Number(userShares) / Number(totalShares)) * 100).toFixed(2) : "0.00"}%</div>
                                  </div>
                                  <div className="text-right">
-                                    <div className="text-xs text-slate-500 mb-1 font-medium">LP Tokens</div>
-                                    <div className="text-xl font-bold font-mono text-slate-900">{Number(userShares) / 10000000} LP</div>
+                                    <div className="text-xs text-neutral-500 mb-1 font-medium uppercase tracking-tight">LP_Tokens</div>
+                                    <div className="text-xl font-bold font-mono text-white tracking-tight">{Number(userShares) / 10000000} LP</div>
                                  </div>
                               </div>
-                              <div className="space-y-4 pt-6 border-t border-slate-100">
-                                 <p className="text-xs text-slate-500 leading-relaxed font-medium italic">Your liquidity is generating 0.3% fees on every trade in this pool. Fees are automatically compounded into your position.</p>
+                              <div className="space-y-4 pt-6 border-t border-white/5">
+                                 <p className="text-xs text-neutral-600 leading-relaxed font-medium italic">Your liquidity is generating 0.3% fees on every trade in this pool. Fees are automatically compounded into your position.</p>
                               </div>
                            </div>
                         ) : (
-                           <div className="py-12 flex flex-col items-center justify-center border-2 border-dashed border-slate-100 rounded-[32px] gap-4">
-                              <p className="text-xs font-mono text-slate-400 uppercase tracking-widest">Connect Wallet to view position</p>
-                              <button onClick={connect} className="bg-slate-900 text-white hover:bg-slate-800 px-6 py-2 rounded-xl text-xs font-bold transition-all active:scale-[0.95]">Connect Now</button>
+                           <div className="py-12 flex flex-col items-center justify-center border-2 border-dashed border-white/5 rounded-[32px] gap-4">
+                              <p className="text-[10px] font-mono text-neutral-600 uppercase tracking-[0.2em]">INITIALIZE_WALLET_TO_VIEW_POSITION</p>
+                              <button onClick={connect} className="bg-white text-black hover:bg-neutral-200 px-6 py-2 rounded-xl text-xs font-bold transition-all active:scale-[0.95] tracking-tight">Initialize Now</button>
                            </div>
                         )}
                     </GlassCard>
 
-                    <div className="p-8 rounded-[32px] bg-cyan-50 border border-brand-cyan/10">
-                       <h4 className="font-bold flex items-center gap-2 text-sm mb-4 text-slate-900"><ArrowRightLeft size={16} className="text-brand-cyan" /> Why Add Liquidity?</h4>
-                       <ul className="space-y-3 text-xs text-slate-600 font-medium list-disc ml-4">
-                          <li>Earn passive income from trading volume.</li>
-                          <li>Help stabilize the XLM/TKNA network.</li>
-                          <li>Receive LP tokens that represent your pool ownership.</li>
+                    <div className="p-8 rounded-[32px] bg-emerald-500/5 border border-emerald-500/10 relative overflow-hidden">
+                       <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-emerald-500/10 to-transparent" />
+                       <h4 className="font-bold flex items-center gap-2 text-sm mb-4 text-white"><ArrowRightLeft size={16} className="text-brand-green" /> Why Provision Liquidity?</h4>
+                       <ul className="space-y-3 text-[11px] text-neutral-500 font-medium list-disc ml-4 leading-relaxed">
+                          <li>Earn passive income from trade velocity.</li>
+                          <li>Stabilize the XLM/BKSWP corridor.</li>
+                          <li>Receive cryptographic tokens representing ownership.</li>
                        </ul>
                     </div>
                  </div>

@@ -9,8 +9,11 @@ export default function LandingPage() {
     <div className="bg-black min-h-screen">
       <Navbar />
       <Hero />
+      <div className="glow-line opacity-50" />
       <StatsBar />
+      <div className="glow-line opacity-30" />
       <FeatureGrid />
+      <div className="glow-line opacity-20" />
       <Footer />
     </div>
   );

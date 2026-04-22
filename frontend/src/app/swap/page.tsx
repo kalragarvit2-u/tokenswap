@@ -33,8 +33,9 @@ export default function SwapPage() {
   const [isQuoting, setIsQuoting] = useState(false);
   const [sellAmount, setSellAmount] = useState("");
   const [buyAmount, setBuyAmount] = useState("");
+  const [rawBuyAmount, setRawBuyAmount] = useState(""); // High precision quote
   const [sellToken, setSellToken] = useState({ id: "XLM", symbol: "XLM", logo: "🚀" });
-  const [buyToken, setBuyToken] = useState({ id: "TKNA", symbol: "TKNA", logo: "🧪" });
+  const [buyToken, setBuyToken] = useState({ id: "BKSWP", symbol: "BKSWP", logo: "🧪" });
   const [isTokenSelectorOpen, setIsTokenSelectorOpen] = useState(false);
   const [selectorTarget, setSelectorTarget] = useState<"sell" | "buy">("sell");
   const [isSlippageOpen, setIsSlippageOpen] = useState(false);
@@ -52,8 +53,10 @@ export default function SwapPage() {
          const quote = await getSwapQuote(sellToken.id, amountInScaled, buyToken.id);
          
          if (quote) {
+            setRawBuyAmount(quote);
             setBuyAmount(parseFloat(quote).toFixed(4));
          } else {
+            setRawBuyAmount("");
             setBuyAmount("0.00");
          }
          setIsQuoting(false);
@@ -87,6 +90,11 @@ export default function SwapPage() {
       await connect();
       return;
     }
+
+    if (!sellAmount || parseFloat(sellAmount) <= 0 || !buyAmount || parseFloat(buyAmount) <= 0) {
+      toast.error("Invalid amount or quote missing");
+      return;
+    }
     
     // Step 1: Trustline Check
     if (!hasTrust) {
@@ -104,9 +112,10 @@ export default function SwapPage() {
       return;
     }
 
-    const minOut = (parseFloat(buyAmount) * (1 - slippage / 100)).toFixed(7).replace(/\.?0+$/, "");
-    const amountIn = (parseFloat(sellAmount) * 10000000).toString();
-    const minOutScaled = (parseFloat(minOut) * 10000000).toString();
+    const calculationBase = rawBuyAmount || buyAmount;
+    const minOut = (parseFloat(calculationBase) * (1 - slippage / 100)).toFixed(7);
+    const amountIn = (parseFloat(sellAmount) * 10000000).toFixed(0);
+    const minOutScaled = (parseFloat(minOut) * 10000000).toFixed(0);
 
     try {
       await executeSwap(address, sellToken.id, amountIn, minOutScaled);
@@ -114,11 +123,11 @@ export default function SwapPage() {
 
       // Calculate new reserves (AMM x * y = k)
       // For this demo, we assume initial reserves are 10,000 : 1,000
-      const currentReserves = { XLM: 10000, TKNA: 1000 };
+      const currentReserves = { XLM: 10000, BKSWP: 1000 };
       const amtIn = parseFloat(sellAmount);
       const amtOut = parseFloat(buyAmount);
       const newResA = sellToken.symbol === "XLM" ? currentReserves.XLM + amtIn : currentReserves.XLM - amtOut;
-      const newResB = sellToken.symbol === "TKNA" ? currentReserves.TKNA + amtIn : currentReserves.TKNA - amtOut;
+      const newResB = sellToken.symbol === "BKSWP" ? currentReserves.BKSWP + amtIn : currentReserves.BKSWP - amtOut;
 
       // Persist to MongoDB
       await Promise.all([
@@ -137,7 +146,7 @@ export default function SwapPage() {
           method: "PATCH",
           body: JSON.stringify({
             xlmReserve: newResA.toString(),
-            tknaReserve: newResB.toString(),
+            bkswpReserve: newResB.toString(),
             volume24h: 482000 + (sellToken.symbol === "XLM" ? amtIn : amtOut * 10)
           })
         })
@@ -154,33 +163,35 @@ export default function SwapPage() {
   };
 
   return (
-    <div className="bg-slate-50 min-h-screen text-slate-900 pt-24 pb-12 selection:bg-brand-cyan/20">
+    <div className="bg-[#050505] min-h-screen text-white pt-24 pb-12 selection:bg-brand-green/20 grain">
       <Navbar />
-      <div className="absolute top-0 left-0 w-full h-[600px] bg-[radial-gradient(circle_at_50%_0%,rgba(6,182,212,0.08),transparent_70%)] pointer-events-none" />
+      <div className="absolute top-0 left-0 w-full h-[600px] bg-[radial-gradient(circle_at_50%_0%,rgba(16,185,129,0.05),transparent_70%)] pointer-events-none" />
 
       <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-12 gap-8 relative z-10">
         
         {/* Left Side: Chart & Info */}
         <div className="hidden lg:flex lg:col-span-3 flex-col gap-6">
-          <div className="bg-white border border-slate-200 p-6 rounded-[32px] h-[350px] shadow-sm">
+          <div className="bg-neutral-900/40 backdrop-blur-xl border border-white/5 p-6 rounded-[32px] h-[350px] shadow-sm relative overflow-hidden">
+             <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-emerald-500/10 to-transparent" />
             <PriceChart />
           </div>
-          <div className="bg-white border border-slate-200 p-6 rounded-[32px] shadow-sm">
-            <h3 className="flex items-center gap-2 font-bold mb-4 text-sm uppercase tracking-widest text-slate-400">
-               <Info size={16} className="text-brand-cyan" /> Pool Info
+          <div className="bg-neutral-900/40 backdrop-blur-xl border border-white/5 p-6 rounded-[32px] shadow-sm relative overflow-hidden">
+             <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-emerald-500/10 to-transparent" />
+            <h3 className="flex items-center gap-2 font-bold mb-4 text-sm uppercase tracking-widest text-neutral-500">
+               <Info size={16} className="text-brand-green" /> Pool Info
             </h3>
             <div className="space-y-3 text-sm">
                 <div className="flex justify-between">
-                   <span className="text-slate-500">Liquidity</span>
-                   <span className="font-mono text-slate-900 font-semibold">$2.4M</span>
+                   <span className="text-neutral-500">Liquidity</span>
+                   <span className="font-mono text-white font-semibold">$2.4M</span>
                 </div>
                 <div className="flex justify-between">
-                   <span className="text-slate-500">Vol 24H</span>
-                   <span className="font-mono text-slate-900 font-semibold">$482k</span>
+                   <span className="text-neutral-500">Vol 24H</span>
+                   <span className="font-mono text-white font-semibold">$482k</span>
                 </div>
                 <div className="flex justify-between">
-                   <span className="text-slate-500">Fees 24H</span>
-                   <span className="font-mono text-slate-900 font-semibold">$1.4k</span>
+                   <span className="text-neutral-500">Fees 24H</span>
+                   <span className="font-mono text-white font-semibold">$1.4k</span>
                 </div>
             </div>
           </div>
@@ -188,16 +199,18 @@ export default function SwapPage() {
 
         <div className="lg:col-span-6 flex flex-col gap-6 justify-center items-start pt-0 lg:pt-8">
           <PreflightCheck />
-          <GlassCard className="w-full max-w-[480px] p-8 shadow-2xl relative bg-white border-slate-200">
+          <GlassCard className="w-full max-w-[480px] p-8 shadow-2xl relative bg-neutral-900/60 border-white/10 grain">
+            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-4/5 h-px bg-gradient-to-r from-transparent via-emerald-500/20 to-transparent" />
+            
             {/* Header */}
             <div className="flex justify-between items-center mb-8">
-              <h2 className="text-2xl font-bold text-slate-900">Swap</h2>
+              <h2 className="text-2xl font-bold text-white tracking-tight">Swap</h2>
               <div className="flex gap-2">
                 <button 
                   onClick={() => setIsSlippageOpen(true)}
-                  className="p-3 bg-slate-100 hover:bg-slate-200 rounded-2xl transition-all"
+                  className="p-3 bg-white/5 hover:bg-white/10 border border-white/5 rounded-2xl transition-all"
                 >
-                  <Settings2 size={20} className="text-slate-500" />
+                  <Settings2 size={20} className="text-neutral-400" />
                 </button>
               </div>
             </div>
@@ -205,14 +218,14 @@ export default function SwapPage() {
             {/* Inputs */}
             <div className="space-y-2 relative">
               {/* From */}
-              <div className="p-6 rounded-3xl bg-slate-50 border border-slate-100 group hover:border-brand-cyan/20 transition-all">
+              <div className="p-6 rounded-3xl bg-black/40 border border-white/5 group hover:border-brand-green/20 transition-all">
                 <div className="flex justify-between items-center mb-4">
-                  <span className="text-[10px] font-bold uppercase tracking-widest text-slate-400">You Pay</span>
-                  <div className="text-[10px] font-medium text-slate-400">
-                    Balance: <span className="text-slate-600 font-semibold">{balances[sellToken.symbol as keyof typeof balances] || 0}</span>
+                  <span className="text-[10px] font-bold uppercase tracking-widest text-neutral-500">You Pay</span>
+                  <div className="text-[10px] font-medium text-neutral-500">
+                    Balance: <span className="text-neutral-300 font-semibold">{balances[sellToken.symbol as keyof typeof balances] || 0}</span>
                     <button 
                       onClick={() => setSellAmount((balances[sellToken.symbol as keyof typeof balances] || 0).toString())}
-                      className="ml-2 text-brand-cyan uppercase font-bold hover:text-cyan-600 transition-colors"
+                      className="ml-2 text-brand-green uppercase font-bold hover:text-emerald-400 transition-colors"
                     >
                       MAX
                     </button>
@@ -224,15 +237,15 @@ export default function SwapPage() {
                     placeholder="0.00"
                     value={sellAmount}
                     onChange={(e) => setSellAmount(e.target.value)}
-                    className="bg-transparent text-4xl font-bold outline-none w-full placeholder:text-slate-200 text-slate-900"
+                    className="bg-transparent text-4xl font-bold outline-none w-full placeholder:text-neutral-800 text-white tracking-tighter"
                   />
                   <button 
                     onClick={() => { setSelectorTarget("sell"); setIsTokenSelectorOpen(true); }}
-                    className="flex items-center gap-2 bg-white hover:bg-slate-50 px-4 py-2 rounded-2xl border border-slate-200 shadow-sm transition-all active:scale-95"
+                    className="flex items-center gap-2 bg-white/5 hover:bg-white/10 px-4 py-2 rounded-2xl border border-white/10 shadow-sm transition-all active:scale-95"
                   >
                     <span className="text-xl">{sellToken.logo}</span>
-                    <span className="font-bold text-slate-900">{sellToken.symbol}</span>
-                    <ChevronDown size={16} className="text-slate-400" />
+                    <span className="font-bold text-white">{sellToken.symbol}</span>
+                    <ChevronDown size={16} className="text-neutral-500" />
                   </button>
                 </div>
               </div>
@@ -247,29 +260,29 @@ export default function SwapPage() {
                     setSellToken(buyToken);
                     setBuyToken(temp);
                   }}
-                  className="p-3 rounded-2xl bg-white border border-slate-200 text-brand-cyan shadow-lg hover:border-brand-cyan/30 transition-all"
+                  className="p-3 rounded-2xl bg-neutral-900 border border-white/10 text-brand-green shadow-2xl hover:border-brand-green/30 transition-all"
                 >
                   <ArrowLeftRight size={20} />
                 </motion.button>
               </div>
 
               {/* To */}
-              <div className="p-6 rounded-3xl bg-slate-50 border border-slate-100 group hover:border-brand-cyan/20 transition-all pt-8">
+              <div className="p-6 rounded-3xl bg-black/40 border border-white/5 group hover:border-brand-green/20 transition-all pt-8">
                 <div className="flex justify-between items-center mb-4">
-                  <span className="text-[10px] font-bold uppercase tracking-widest text-slate-400">You Receive</span>
-                  <div className="text-[10px] font-medium text-slate-400">
-                    Balance: <span className="text-slate-600 font-semibold">{(balances[buyToken.symbol as keyof typeof balances] || 0).toLocaleString()}</span>
-                    {buyToken.symbol === "TKNA" && (balances[buyToken.symbol as keyof typeof balances] || 0) === 0 && (
+                  <span className="text-[10px] font-bold uppercase tracking-widest text-neutral-500">You Receive</span>
+                  <div className="text-[10px] font-medium text-neutral-500">
+                    Balance: <span className="text-neutral-300 font-semibold">{(balances[buyToken.symbol as keyof typeof balances] || 0).toLocaleString()}</span>
+                    {buyToken.symbol === "BKSWP" && (balances[buyToken.symbol as keyof typeof balances] || 0) === 0 && (
                       <button 
                         onClick={async () => {
                            const { mintToken } = await import("@/hooks/useAdmin").then(m => m.useAdmin());
                            toast.promise(mintToken(address || "", "100"), {
-                             loading: "Issuing 100 TKNA tokens...",
-                             success: "100 TKNA tokens issued!",
+                             loading: "Issuing 100 BKSWP tokens...",
+                             success: "100 BKSWP tokens issued!",
                              error: "Only administrators can issue tokens."
                            });
                         }}
-                        className="ml-2 text-emerald-600 uppercase font-bold hover:text-emerald-700 transition-colors"
+                        className="ml-2 text-emerald-500 uppercase font-bold hover:text-emerald-400 transition-colors"
                       >
                         [ Faucet ]
                       </button>
@@ -277,22 +290,22 @@ export default function SwapPage() {
                   </div>
                 </div>
                 <div className="flex justify-between items-center gap-4">
-                  <div className="text-4xl font-bold w-full truncate h-10 flex items-center text-slate-900">
+                  <div className="text-4xl font-bold w-full truncate h-10 flex items-center text-white tracking-tighter">
                     {isQuoting ? (
-                      <Loader2 className="animate-spin text-brand-cyan" size={24} />
+                      <Loader2 className="animate-spin text-brand-green" size={24} />
                     ) : buyAmount ? (
                       buyAmount
                     ) : (
-                      <span className="text-slate-200">0.00</span>
+                      <span className="text-neutral-800">0.00</span>
                     )}
                   </div>
                   <button 
                     onClick={() => { setSelectorTarget("buy"); setIsTokenSelectorOpen(true); }}
-                    className="flex items-center gap-2 bg-white hover:bg-slate-50 px-4 py-2 rounded-2xl border border-slate-200 shadow-sm transition-all active:scale-95"
+                    className="flex items-center gap-2 bg-white/5 hover:bg-white/10 px-4 py-2 rounded-2xl border border-white/10 shadow-sm transition-all active:scale-95"
                   >
                     <span className="text-xl">{buyToken.logo}</span>
-                    <span className="font-bold text-slate-900">{buyToken.symbol}</span>
-                    <ChevronDown size={16} className="text-slate-400" />
+                    <span className="font-bold text-white">{buyToken.symbol}</span>
+                    <ChevronDown size={16} className="text-neutral-500" />
                   </button>
                 </div>
               </div>
@@ -307,19 +320,19 @@ export default function SwapPage() {
                   exit={{ height: 0, opacity: 0 }}
                   className="mt-6 space-y-3 overflow-hidden text-xs"
                 >
-                   <div className="flex justify-between items-center text-slate-500">
+                   <div className="flex justify-between items-center text-neutral-500">
                       <span>Exchange Rate</span>
-                      <span className="font-mono text-slate-700">
+                      <span className="font-mono text-neutral-300">
                         {isQuoting ? "..." : `1 ${sellToken.symbol} = ${(parseFloat(buyAmount) / (parseFloat(sellAmount) || 1)).toFixed(4)} ${buyToken.symbol}`}
                       </span>
                    </div>
-                   <div className="flex justify-between items-center text-slate-500">
+                   <div className="flex justify-between items-center text-neutral-500">
                       <span>Price Impact</span>
                       <span className={`font-mono font-semibold ${getImpactColor(priceImpact)}`}>{poolLoading ? "..." : `${priceImpact.toFixed(2)}%`}</span>
                    </div>
-                   <div className="flex justify-between items-center text-slate-500">
+                   <div className="flex justify-between items-center text-neutral-500">
                       <span>Slippage Tolerance</span>
-                      <span className="font-mono text-brand-cyan font-semibold">{slippage}%</span>
+                      <span className="font-mono text-brand-green font-semibold">{slippage}%</span>
                    </div>
                 </motion.div>
               )}
@@ -328,11 +341,17 @@ export default function SwapPage() {
             {/* Main Button */}
             <button 
               onClick={handleSwap}
-              disabled={(status !== "IDLE" && status !== "SUCCESS" && status !== "ERROR") || isCheckingTrust}
+              disabled={
+                (status !== "IDLE" && status !== "SUCCESS" && status !== "ERROR") || 
+                isCheckingTrust || 
+                !sellAmount || 
+                parseFloat(sellAmount) <= 0 || 
+                isQuoting
+              }
               className={`w-full py-5 rounded-[24px] font-bold text-lg mt-8 transition-all flex items-center justify-center gap-2 group overflow-hidden relative ${
                 address 
-                  ? "bg-brand-cyan text-white shadow-[0_10px_20px_-5px_rgba(6,182,212,0.3)] hover:shadow-[0_10px_30px_-5px_rgba(6,182,212,0.5)] active:scale-[0.98]" 
-                  : "bg-slate-900 text-white hover:bg-slate-800"
+                  ? "bg-brand-green text-black shadow-[0_10px_20px_-5px_rgba(16,185,129,0.3)] hover:shadow-[0_10px_30px_-5px_rgba(16,185,129,0.5)] active:scale-[0.98]" 
+                  : "bg-neutral-800 text-white hover:bg-neutral-700 border border-white/5"
               }`}
             >
               <span className="z-10 flex items-center gap-2">
@@ -360,7 +379,7 @@ export default function SwapPage() {
                  animate={{ opacity: 1 }}
                  href={`https://blockchain.expert/explorer/testnet/tx/${txHash}`}
                  target="_blank"
-                 className="flex items-center justify-center gap-2 mt-6 text-[10px] text-slate-400 hover:text-brand-cyan transition-colors uppercase font-bold tracking-widest"
+                 className="flex items-center justify-center gap-2 mt-6 text-[10px] text-neutral-500 hover:text-brand-green transition-colors uppercase font-bold tracking-widest"
                >
                  View on Explorer <ExternalLink size={10} />
                </motion.a>
@@ -370,25 +389,26 @@ export default function SwapPage() {
 
         {/* Right Side: Feed */}
         <div className="hidden lg:flex lg:col-span-3 flex-col gap-6">
-           <div className="bg-white border border-slate-200 h-full rounded-[32px] overflow-hidden flex flex-col shadow-sm">
-              <div className="p-6 border-b border-slate-100 flex items-center justify-between">
-                <h3 className="font-bold flex items-center gap-2 text-sm text-slate-900">
-                   <Activity size={18} className="text-brand-cyan" /> Live Activity
+           <div className="bg-neutral-900/40 backdrop-blur-xl border border-white/5 h-full rounded-[32px] overflow-hidden flex flex-col shadow-sm relative">
+              <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-emerald-500/10 to-transparent" />
+              <div className="p-6 border-b border-white/5 flex items-center justify-between">
+                <h3 className="font-bold flex items-center gap-2 text-sm text-white">
+                   <Activity size={18} className="text-brand-green" /> Live Activity
                 </h3>
               </div>
               <div className="flex-1 overflow-y-auto p-4 space-y-3 custom-scrollbar">
                  {events.map((e) => (
-                    <div key={e.id} className="p-4 rounded-2xl bg-slate-50 border border-slate-100 hover:border-brand-cyan/20 transition-all">
+                    <div key={e.id} className="p-4 rounded-2xl bg-white/5 border border-white/5 hover:border-brand-green/20 transition-all">
                        <div className="flex justify-between text-[10px] mb-2">
                           <span className={`font-bold ${
-                            e.type === 'swap' ? 'text-brand-cyan' : 
-                            e.type === 'deposit' ? 'text-emerald-500' : 'text-blue-500'
+                            e.type === 'swap' ? 'text-brand-green' : 
+                            e.type === 'deposit' ? 'text-emerald-500' : 'text-rose-500'
                           }`}>{e.type.toUpperCase()}</span>
-                          <span className="text-slate-400 font-mono">NEW</span>
+                          <span className="text-neutral-500 font-mono">NEW</span>
                        </div>
-                       <div className="text-xs font-semibold text-slate-700">
+                       <div className="text-xs font-semibold text-neutral-300">
                           {e.type === 'swap' ? (
-                            `${Number(e.data.amountIn)/1e7} XLM → ${Number(e.data.amountOut)/1e7} TKNA`
+                            `${Number(e.data.amountIn)/1e7} XLM → ${Number(e.data.amountOut)/1e7} BKSWP`
                           ) : (
                             "Protocol Activity"
                           )}

@@ -17,24 +17,25 @@ export default function PreflightCheck() {
   ];
 
   return (
-    <GlassCard className="p-8 bg-white border-slate-200">
-      <h3 className="text-xl font-bold mb-6 flex items-center gap-2 text-slate-900">
-        Protocol Health 
+    <GlassCard className="p-8 bg-neutral-900/60 border-white/5 relative overflow-hidden group">
+      <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-emerald-500/10 to-transparent" />
+      <h3 className="text-xl font-bold mb-6 flex items-center justify-between text-white">
+        Health Status
         <StatusBadge type="live">
-          Blockchain Testnet Live
+          Testnet
         </StatusBadge>
       </h3>
       
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {checks.map((check) => (
-          <div key={check.name} className="p-4 rounded-2xl bg-slate-50 border border-slate-100 flex items-center justify-between">
+          <div key={check.name} className="p-4 rounded-2xl bg-black/40 border border-white/5 flex items-center justify-between group/item">
             <div className="flex items-center gap-3">
-              <div className="p-2 bg-cyan-50 rounded-xl">
-                <check.icon size={18} className="text-brand-cyan" />
+              <div className="p-2 bg-white/5 rounded-xl border border-white/5">
+                <check.icon size={18} className="text-brand-green" />
               </div>
-              <span className="text-sm font-medium text-slate-700">{check.name}</span>
+              <span className="text-xs font-medium text-neutral-400 group-hover/item:text-neutral-200 transition-colors uppercase tracking-tight">{check.name}</span>
             </div>
-            <span className="text-[10px] font-bold uppercase tracking-widest flex-shrink-0 ml-2 text-emerald-600">{check.status}</span>
+            <span className="text-[10px] font-bold uppercase tracking-widest flex-shrink-0 ml-2 text-brand-green">{check.status}</span>
           </div>
         ))}
       </div>
