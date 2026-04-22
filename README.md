@@ -5,8 +5,6 @@
 <div align="center">
   <p><strong>Trade at the Speed of Blockchain. Atomic. Transparent. Interconnected.</strong></p>
   
-  [![Blockchain Swap CI](https://github.com/Garvitk06/blockchain-swap/actions/workflows/ci.yml/badge.svg)](https://github.com/Garvitk06/blockchain-swap/actions/workflows/ci.yml)
-  [![Vercel Deployment](https://img.shields.io/badge/Vercel-Deployed-black?style=flat&logo=vercel)](https://blockchain-swap-frontend.vercel.app/)
   [![License: MIT](https://img.shields.io/badge/License-MIT-purple.svg)](https://opensource.org/licenses/MIT)
   [![Network: Testnet](https://img.shields.io/badge/Network-Testnet-cyan.svg)](https://developers.stellar.org/docs/fundamentals-and-concepts/network-passphrases)
 </div>
@@ -78,7 +76,7 @@ graph TD
 ### 2. Local Setup
 ```bash
 # Clone the repository
-git clone https://github.com/Garvitk06/blockchain-swap.git && cd blockchain-swap
+git clone <repository_url> && cd blockchain-swap
 
 # Setup Frontend
 cd frontend && npm install
@@ -92,12 +90,6 @@ stellar contract build
 # Run contract tests
 cargo test
 ```
-
-## 🧪 CI/CD Pipeline
-Blockchain Swap uses GitHub Actions for automated verification. You can view the status badge at the top of this file. The pipeline ensures:
-- Rust toolchain (v1.81.0) compatibility.
-- successful WASM compilation for all contracts.
-- Frontend linting and type checking.
 
 ## 📄 License
 
