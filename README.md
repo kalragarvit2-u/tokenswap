@@ -1,11 +1,11 @@
-# 🧪 Blockchain Swap
+# 🧪 Token Swap
 
-![Blockchain Swap Hero Banner](screenshots/dashboard.png)
+![Token Swap Hero Banner](screenshots/dashboard.png)
 
 <div align="center">
   <p><strong>Trade at the Speed of Blockchain. Atomic. Transparent. Interconnected.</strong></p>
   
-  [![Blockchain Swap CI](https://github.com/Garvitk06/blockchain-swap/actions/workflows/ci.yml/badge.svg)](https://github.com/Garvitk06/blockchain-swap/actions/workflows/ci.yml)
+  [![Token Swap CI](https://github.com/Garvitk06/blockchain-swap/actions/workflows/ci.yml/badge.svg)](https://github.com/Garvitk06/blockchain-swap/actions/workflows/ci.yml)
   [![Vercel Deployment](https://img.shields.io/badge/Vercel-Deployed-black?style=flat&logo=vercel)](https://blockchain-swap-frontend.vercel.app/)
   [![License: MIT](https://img.shields.io/badge/License-MIT-purple.svg)](https://opensource.org/licenses/MIT)
   [![Network: Testnet](https://img.shields.io/badge/Network-Testnet-cyan.svg)](https://developers.stellar.org/docs/fundamentals-and-concepts/network-passphrases)
@@ -13,9 +13,9 @@
 
 ---
 
-### 🚀 [Live Demo](https://blockchain-swap-frontend.vercel.app/)
+### 🚀 [Live Demo](https://blockchainswap-frontend.vercel.app/)
 
-Blockchain Swap is an institutional-grade Decentralized Exchange (DEX) protocol built on the Blockchain network using Soroban smart contracts. It enables seamless, atomic trading and liquidity provision with a high-fidelity user interface.
+Token Swap is an institutional-grade Decentralized Exchange (DEX) protocol built on the Blockchain network using Soroban smart contracts. It enables seamless, atomic trading and liquidity provision with a high-fidelity user interface.
 
 ## ✨ Features
 
@@ -33,7 +33,7 @@ Blockchain Swap is an institutional-grade Decentralized Exchange (DEX) protocol 
 
 ## 🏗️ Technical Architecture
 
-Blockchain Swap utilizes a hub-and-spoke execution model where the **Router** contract orchestrates interactions between standard tokens and liquidity reserves.
+Token Swap utilizes a hub-and-spoke execution model where the **Router** contract orchestrates interactions between standard tokens and liquidity reserves.
 
 ```mermaid
 graph TD
@@ -94,14 +94,14 @@ cargo test
 ```
 
 ## 🧪 CI/CD Pipeline
-Blockchain Swap uses GitHub Actions for automated verification. You can view the status badge at the top of this file. The pipeline ensures:
+Token Swap uses GitHub Actions for automated verification. You can view the status badge at the top of this file. The pipeline ensures:
 - Rust toolchain (v1.81.0) compatibility.
 - successful WASM compilation for all contracts.
 - Frontend linting and type checking.
 
 ## 📄 License
 
-Blockchain Swap is open-source software licensed under the **MIT License**. See the [LICENSE](LICENSE) file for details.
+Token Swap is open-source software licensed under the **MIT License**. See the [LICENSE](LICENSE) file for details.
 
 ---
 
