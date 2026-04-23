@@ -29,7 +29,7 @@ Token Swap is an institutional-grade Decentralized Exchange (DEX) protocol built
 
 | Main Trading Dashboard | Admin Protocol Hub |
 |:---:|:---:|
-| ![Trading Dashboard](screenshots/dashboard.png) | ![Admin Hub](screenshots/admin_hub.png) |
+| ![Trading Dashboard](screenshots/dashboard.png) | ![Admin Hub](screenshots/image.png) |
 
 ## 🏗️ Technical Architecture
 
