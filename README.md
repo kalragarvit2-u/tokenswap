@@ -31,6 +31,9 @@ Token Swap is an institutional-grade Decentralized Exchange (DEX) protocol built
 |:---:|:---:|
 | ![Trading Dashboard](screenshots/dashboard.png) | ![Admin Hub](screenshots/image.png) |
 
+### 🎥 Live Demo
+![App Demo](screen_recording.gif)
+
 ## 🏗️ Technical Architecture
 
 Token Swap utilizes a hub-and-spoke execution model where the **Router** contract orchestrates interactions between standard tokens and liquidity reserves.
