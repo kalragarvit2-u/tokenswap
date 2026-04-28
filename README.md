@@ -88,13 +88,33 @@ cd frontend && npm install
 npm run dev
 ```
 
-### 3. Contract Builds
+### 3. Smart Contracts & Testing
+
+Token Swap uses three core Soroban smart contracts. 
+
+#### Contract Overview
+| Contract | Directory | Description |
+|----------|-----------|-------------|
+| **Token** | `contracts/token` | Standard Soroban token implementation with mint/burn and allowance support. |
+| **Liquidity Pool** | `contracts/liquidity-pool` | AMM pool handling reserves, LP shares, and constant product ($x \times y = k$) logic. |
+| **Router** | `contracts/router` | Orchestrator that manages swaps, routes trades, and applies slippage limits. |
+
+#### Building Contracts
+Compile all contracts into WebAssembly (WASM):
 ```bash
-# Build contracts to WASM
 stellar contract build
-# Run contract tests
-cargo test
 ```
+
+#### Running Tests
+The smart contracts are thoroughly tested using the `cargo test` framework. 
+
+| Testing Command | Action |
+|-----------------|--------|
+| `cargo test` | Runs the full test suite for all contracts in the workspace. |
+| `cargo test -p token` | Runs tests exclusively for the Token contract. |
+| `cargo test -p liquidity-pool` | Runs tests exclusively for the Liquidity Pool contract. |
+| `cargo test -p router` | Runs tests exclusively for the Router contract. |
+| `cargo test -- --nocapture` | Runs tests and prints all standard output for debugging purposes. |
 
 ## 🧪 CI/CD Pipeline
 Token Swap uses GitHub Actions for automated verification. You can view the status badge at the top of this file. The pipeline ensures:
