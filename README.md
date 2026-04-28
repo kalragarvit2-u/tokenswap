@@ -106,15 +106,39 @@ stellar contract build
 ```
 
 #### Running Tests
-The smart contracts are thoroughly tested using the `cargo test` framework. 
+
+Follow these steps to run the comprehensive test suite:
+
+1.  **Navigate to Root**: Ensure you are in the project root directory.
+2.  **Verify Prerequisites**: Make sure [Rust](https://www.rust-lang.org/tools/install) and [Stellar CLI](https://developers.stellar.org/docs/smart-contracts/getting-started/setup) are installed.
+3.  **Execute Tests**: Use `cargo test` to run all unit and integration tests.
 
 | Testing Command | Action |
 |-----------------|--------|
-| `cargo test` | Runs the full test suite for all contracts in the workspace. |
-| `cargo test -p token` | Runs tests exclusively for the Token contract. |
-| `cargo test -p liquidity-pool` | Runs tests exclusively for the Liquidity Pool contract. |
-| `cargo test -p router` | Runs tests exclusively for the Router contract. |
-| `cargo test -- --nocapture` | Runs tests and prints all standard output for debugging purposes. |
+| `cargo test` | Runs the full test suite for all contracts. |
+| `cargo test -p token` | Tests exclusively for the **Token** contract. |
+| `cargo test -p liquidity-pool` | Tests exclusively for the **Liquidity Pool** contract. |
+| `cargo test -p router` | Tests exclusively for the **Router** contract. |
+| `cargo test -- --nocapture` | Displays `println!` output for debugging. |
+
+#### Step-by-Step Execution Guide
+
+1.  **Clean and Build**: Recommended to ensure WebAssembly targets are up to date.
+    ```bash
+    stellar contract build
+    ```
+2.  **Run Global Tests**: Execute the entire suite to check for cross-contract regressions.
+    ```bash
+    cargo test
+    ```
+3.  **Target a Contract**: If debugging a specific module (e.g., AMM math), use the package flag:
+    ```bash
+    cargo test -p liquidity-pool
+    ```
+4.  **Verbose Debugging**: If a test fails, use the nocapture flag to see detailed logs:
+    ```bash
+    cargo test -- --nocapture
+    ```
 
 ## 🧪 CI/CD Pipeline
 Token Swap uses GitHub Actions for automated verification. You can view the status badge at the top of this file. The pipeline ensures:
